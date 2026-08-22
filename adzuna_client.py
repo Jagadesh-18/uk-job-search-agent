@@ -1,12 +1,24 @@
 import os
 import requests
 from dotenv import load_dotenv
-
+from models import Job
 load_dotenv()
 
 adzuna_app_id = os.getenv("ADZUNA_APP_ID")
 adzuna_app_key = os.getenv("ADZUNA_APP_KEY")
 adzuna_base_url = "https://api.adzuna.com/v1/api/jobs/gb/search/1"
+
+def normalize_adzuna_job(raw):
+    salary = f"£{raw['salary_min']:,.0f}+" if raw.get("salary_min") else None
+    return Job(
+        title=raw["title"],
+        company=raw.get("company", {}).get("display_name", "Unknown"),
+        location=raw.get("location", {}).get("display_name", ""),
+        url=raw["redirect_url"],
+        source="adzuna",
+        salary=salary,
+        description=raw.get("description"),
+    )
 
 def search_adzuna_jobs(keywords, location="", results_per_page=20):
     """Search for jobs on Adzuna using the provided keywords and location."""

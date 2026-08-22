@@ -1,12 +1,24 @@
 import os
 import requests 
 from dotenv import load_dotenv
-
+from models import Job
 
 load_dotenv()
 
 reed_api_key = os.getenv("REED_API_KEY")
 reed_base_url = "https://www.reed.co.uk/api/1.0/search"
+
+def normalize_reed_job(raw):
+    salary = f"£{raw['minimumSalary']:,.0f}+" if raw.get("minimumSalary") else None
+    return Job(
+        title=raw["jobTitle"],
+        company=raw["employerName"],
+        location=raw["locationName"],
+        url=raw["jobUrl"],
+        source="reed",
+        salary=salary,
+        description=raw.get("jobDescription"),
+    )
 
 def search_reed_jobs(keywords, location="", results_to_take=20):
     """Search for jobs on Reed.co.uk using the provided keywords and location."""
