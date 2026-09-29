@@ -1,9 +1,10 @@
 from aggregate import aggregate_jobs
 from ranker import score_jobs
 
+SEARCH_TERMS = ["machine learning engineer", "AI engineer", "data scientist", "MLOps engineer"]
 
-def get_ranked_jobs(keywords, location="", top_n=15):
-    jobs = aggregate_jobs(keywords, location)
+def get_ranked_jobs(search_terms, location="", top_n=15):
+    jobs = aggregate_jobs(search_terms, location)
     scores = score_jobs(jobs)
 
     scored_jobs = [
@@ -16,7 +17,7 @@ def get_ranked_jobs(keywords, location="", top_n=15):
 
 
 if __name__ == "__main__":
-    top_jobs = get_ranked_jobs("machine learning engineer", location="London")
+    top_jobs = get_ranked_jobs(SEARCH_TERMS)
     print(f"Top {len(top_jobs)} ranked jobs:\n")
     for score, reason, job in top_jobs:
         print(f"[{score}] [{job.source}] {job.title} at {job.company} ({job.location})")
