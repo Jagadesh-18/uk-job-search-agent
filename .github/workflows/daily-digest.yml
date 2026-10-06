@@ -34,7 +34,7 @@ jobs:
                     jobs-db-
 
 
-            - name: Run the job search agent
+            - name: Run the agent
               env:
                 REED_API_KEY: ${{ secrets.REED_API_KEY }}
                 ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
@@ -42,8 +42,8 @@ jobs:
                 GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
                 EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
                 EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
-              run: |
-                  python main.py
+              run: python main.py
+              
             - name: Save job history
               uses: actions/cache/save@v4
               with:
@@ -57,4 +57,3 @@ jobs:
                 name: digest
                 path: digests/
                 if-no-files-found: ignore
-                
