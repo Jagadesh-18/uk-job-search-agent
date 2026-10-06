@@ -4,6 +4,7 @@ from datetime import date
 from aggregate import aggregate_jobs
 from ranker import score_jobs
 from storage import init_db, filter_unseen, record_seen
+from emailer import send_digest_email
 
 SEARCH_TERMS = ["machine learning engineer", "AI engineer", "data scientist", "MLOps engineer"]
 DIGEST_DIR= "digests"
@@ -61,3 +62,8 @@ if __name__ == "__main__":
             print(f"  Why: {reason}")
             print(f"  {job.url}\n")
     print(f"\nDigest Saved to {filepath}")
+    
+    with open(filepath, 'r', encoding="utf-8") as f:
+        body=f.read()
+    if send_digest_email(f"Job Digest --{date.today().isoformat()}",body):
+        print("Digest email sent successfully.")
