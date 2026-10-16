@@ -1,11 +1,16 @@
 from reed_client import search_reed_jobs, normalize_reed_job
 from adzuna_client import search_adzuna_jobs, normalize_adzuna_job
+import re 
+import re
 
-SENIORITY_EXCLUDE=["senior", "sr","sr.", "lead", "principal", "staff", "head of", "director", "vp ", "chief", "mid-snr", "mid/senior"]
+SENIORITY_PATTERN = re.compile(
+    r"\b(senior|sr|lead|principal|staff|head of|director|vp|chief|mid-snr|ii|iii|iv)\b",
+    re.IGNORECASE,
+)
 
 def is_entry_level(title):
-    title_lower=title.lower()
-    return not any(term in title_lower for term in SENIORITY_EXCLUDE)
+    return not SENIORITY_PATTERN.search(title)
+
 def aggregate_jobs(search_terms, location=""):
     all_jobs = []
     for term in search_terms:

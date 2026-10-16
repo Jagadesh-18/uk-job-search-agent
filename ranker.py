@@ -18,7 +18,8 @@ Projects: reinforcement-learning trading agent for maritime auctions, student pe
 prediction (96% accuracy classifier), heart disease prediction (Random Forest, Flask deployment),
 healthcare chatbot Android app.
 Looking for: entry-level/graduate AI Engineer, Machine Learning Engineer, or Data Scientist roles in the UK.
-"""
+Do not infer seniority from salary. High salaries and day rates (for example £700+) do not make a role junior or entry-level.
+Score lower any role that clearly asks for several years of experience, and make each reason specific to the job, not generic."""
 
 class JobScore(BaseModel):
     index: int = Field(description="The job's index in the input list")
