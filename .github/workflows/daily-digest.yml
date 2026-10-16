@@ -34,18 +34,7 @@ jobs:
           restore-keys: |
             jobs-db-
 
-      - name: Check secrets are present (temporary)
-        env:
-          REED_API_KEY: ${{ secrets.REED_API_KEY }}
-          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
-          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
-          EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
-        run: |
-          for v in REED_API_KEY ADZUNA_APP_ID ADZUNA_APP_KEY GEMINI_API_KEY EMAIL_ADDRESS EMAIL_APP_PASSWORD; do
-            if [ -z "${!v}" ]; then echo "$v: MISSING"; else echo "$v: set"; fi
-          done
+      
 
       - name: Run the agent
         env:
@@ -56,6 +45,15 @@ jobs:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
           EMAIL_APP_PASSWORD: ${{ secrets.EMAIL_APP_PASSWORD }}
         run: python main.py
+      - name: Inspect job history (for debugging)
+        run: |
+          python -<<'EOF'
+          import sqlite3
+          c = sqlite3.connect("jobs.db")
+          print(c.execute("SELECT COUNT(*), MIN(first_seen_date), MAX(first_seen_date) FROM seen_jobs").fetchone())
+          for r in c.execute("SELECT dedup_key, first_seen_date FROM seen_jobs WHERE dedup_key LIKE '%fdm%'"):
+              print(r)
+          EOF
 
       - name: Save job history
         uses: actions/cache/save@v4

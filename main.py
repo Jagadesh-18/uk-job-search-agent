@@ -24,6 +24,7 @@ def get_ranked_jobs(search_terms, location="", top_n=15):
     ]
     scored_jobs.sort(key=lambda x: x[0], reverse=True)
     top_jobs = scored_jobs[:top_n]
+    print(f"Funnel: {len(jobs)} after merge/dedup/seniority filter -> {len(new_jobs)} new -> {len(scored_jobs)} judged relevant -> {len(top_jobs)} emailed")
     
     record_seen(new_jobs)
     return top_jobs
