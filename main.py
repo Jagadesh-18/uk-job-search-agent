@@ -15,10 +15,10 @@ def get_ranked_jobs(search_terms, location="", top_n=15):
     new_jobs = filter_unseen(jobs)
     if not new_jobs:
         return[]
-    scores = score_jobs(jobs)
+    scores = score_jobs(new_jobs)
 
     scored_jobs = [
-        (s["score"], s["reason"], jobs[s["index"]])
+        (s["score"], s["reason"], new_jobs[s["index"]])
         for s in scores
         if s["relevant"]
     ]
